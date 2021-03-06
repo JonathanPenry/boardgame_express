@@ -19,12 +19,12 @@ const userFunctions = require("../models/users.model");
 // POST //
 //////////
 // When they go to post (send up) information at page /signup, do ...
-router.post("/signup", (req, res) => {
+router.post("/api/users/signup", (req, res) => {
     return userFunctions.signUp(res, req.body.username, req.body.password);
 });
 
 // When they go to post (send up) information at page /signup, do ...
-router.post("/login", (req, res) => {
+router.post("/api/users/login", (req, res) => {
     return userFunctions.login(res, req.body.username, req.body.password);
 });
 

@@ -18,7 +18,6 @@ const bcrypt = require("bcrypt");               // Password hashing
 // SIGNUP //
 ////////////
 // Async function with try & catch
-
 // Helper function to determine if username and password are valid
 function isValid(val, min, max) {
     return !val || val.length < min || val.length > max;
