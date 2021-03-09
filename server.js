@@ -3,14 +3,16 @@
 /////////////
 // Dotenv must go first
 require("dotenv").config();
+const passport = require("./config/passport.conf");
 const express = require("express");
 const app = express();
+const session = require("express-session")
 // port is either the production port in env file or port 3000
 const PORT = process.env.PORT || 3000;
 // Body Parser allows you to send the Express server json data
 const bodyParser = require ("body-parser");
-// Connecting the user.routes.js & usergames.routes.js to this file and down below with app.use("/todos")
-const userRoutes = require("./routes/user.routes");
+// Connecting the user.routes.js & usergames.routes.js to this file and down below with app.use("/")
+const userRoutes = require("./routes/users.routes");
 const usergamesRoutes = require("./routes/usergames.routes");
 
 
@@ -20,7 +22,14 @@ const usergamesRoutes = require("./routes/usergames.routes");
 // APP.USE() is mostly used to set up middleware for your application. Syntax: app.use(path, callback)
 // Path: It is the path for which the middleware function is being called. It can be a string representing a path or path pattern or regular expression pattern to match the paths.
 // Callback: It is a middleware function or a series/array of middleware functions.
-
+app.use(bodyParser.json());
+app.use("/users", userRoutes);
+app.use("/usergames", usergamesRoutes);
+// For Passport-Sessions
+app.use(session({ secret: process.env.SECRET_KEY }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 ///////////////

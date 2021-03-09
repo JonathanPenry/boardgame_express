@@ -19,9 +19,9 @@ const bcrypt = require("bcrypt");               // Password hashing
 ////////////
 // Async function with try & catch
 // Helper function to determine if username and password are valid
-function isValid(val, min, max) {
-    return !val || val.length < min || val.length > max;
-}
+// function isInvalid(val, min, max) {
+//     return !val || val.length < min || val.length > max;
+// }
 
 async function signUp(res, username, password) {
     try {
@@ -44,24 +44,27 @@ async function signUp(res, username, password) {
 
 
 ///////////
-// Login //
+// Login //     //copied this over to the passport.config.js file
 ///////////
 // Async function with try & catch
-async function login(res, username, password){
-    try {
-        // Check username against database for a match and throw response if not a match
-        let [users] = await pool.query("SELECT * FROM users WHERE users.username = ?", [username,]);
-            if (users.length === 0){throw "Invalid username or password"}
-        // If username matches, check bcrypt password against database for a match
-        // Username "users" from the username db query ([0] is positition in array) needed 
-        const match = await bcrypt.compare(password, users[0], password)
-            if (!match) {throw "Invalid username or password"};
-        // Successful login
-        return res.send({success: true, data: {username: users[0].username}, error: null});
-    }catch {
-        return res.send({success: false, data: null, error: err});
-    }
-}
+// async function login(res, username, password){
+//     try {
+//         if (isInvalid(username, 8, 16) || isInvalid(password, 8, 20)) 
+//             throw "Invalid Data Provided";
+//         // Check username against database for a match and throw response if not a match
+//         let [users] = await pool.query("SELECT * FROM users WHERE users.username = ?", [username,]);
+//             if (users.length === 0){throw "Invalid username or password"}
+//         // If username matches, check bcrypt password against database for a match
+//         // Username "users" from the username db query ([0] is positition in array) needed 
+//         const match = await bcrypt.compare(password, users[0], password)
+//             if (!match) {throw "Invalid username or password"};
+//         // Successful login
+//         return res.send({success: true, data: {username: users[0].username}, error: null});
+//     }catch(err) {
+//         console.log(err);
+//         return res.send({success: false, data: null, error: err});
+//     }
+// }
 
 
 /////////////
@@ -69,4 +72,4 @@ async function login(res, username, password){
 /////////////
 // Import into the users.routes.js
 module.exports.signUp = signUp;
-module.exports.login = login;
+// module.exports.login = login;        // Login has been moved to passport.conf.js
