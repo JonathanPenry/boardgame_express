@@ -80,3 +80,140 @@ module.exports.add = add;
 module.exports.remove = remove;
 module.exports.owned = owned;
 module.exports.byUserID = byUserID;
+
+
+
+//// FROM MIKE's TODOS_API
+// const pool = require("../config/mysql.conf");
+
+// async function add(res, todo, userID) {
+//   try {
+//     // check that they gave us a userID
+//     // check that they gave us a task between 1 and 40 characters
+//     if (
+//       !todo.task ||
+//       todo.task.length < 1 ||
+//       todo.task.length > 40 ||
+//       isNaN(userID)
+//     ) {
+//       throw "Invalid data provided";
+//     }
+//     // try to add it
+//     await pool.query(
+//       "INSERT INTO todos (user_ID, task, completed) VALUES (?,?,false)",
+//       [userID, todo.task]
+//     );
+//     // if successful send a success message
+//     return res.send({
+//       success: true,
+//       data: "Successfully Added the Todo",
+//       error: null,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     // send an error message
+//     return res.send({
+//       success: false,
+//       data: null,
+//       error: err,
+//     });
+//   }
+// }
+
+// async function remove(res, id, userID) {
+//   try {
+//     // try to delete
+//     await pool.query(
+//       "DELETE FROM todos WHERE todos.id = ? AND todos.user_ID = ?",
+//       [id, userID]
+//     );
+//     // if successful send a success message
+//     return res.send({
+//       success: true,
+//       data: "Successfully Deleted",
+//       error: null,
+//     });
+//   } catch (err) {
+//     return res.send({
+//       success: false,
+//       data: null,
+//       error: err,
+//     });
+//   }
+// }
+
+// async function edit(res, todo, userID) {
+//   try {
+//     // check for valid info
+//     if (
+//       isNaN(todo.id) ||
+//       !todo.task ||
+//       todo.task.length < 1 ||
+//       todo.task.length > 40 ||
+//       typeof todo.completed !== "boolean"
+//     ) {
+//       throw "Invalid data provided";
+//     }
+//     // try to update it
+//     await pool.query(
+//       "UPDATE todos SET task = ?, completed = ? WHERE id = ? AND user_ID = ?",
+//       [todo.task, todo.completed, todo.id, userID]
+//     );
+//     // send success message
+//     return res.send({
+//       success: true,
+//       data: "Successfully updated the todo",
+//       error: null,
+//     });
+//   } catch (err) {
+//     return res.send({
+//       success: false,
+//       data: null,
+//       error: err,
+//     });
+//   }
+// }
+
+// async function all(res) {
+//   try {
+//     // get by userID
+//     const [todos] = await pool.query("SELECT * FROM todos");
+//     // send success message
+//     res.send({
+//       success: true,
+//       data: todos,
+//       error: null,
+//     });
+//   } catch (err) {
+//     return res.send({
+//       success: false,
+//       data: null,
+//       error: err,
+//     });
+//   }
+// }
+
+// async function byUserID(res, userID) {
+//   try {
+//     // get by userID
+//     const [
+//       todos,
+//     ] = await pool.query("SELECT * FROM todos WHERE todos.user_ID = ?", [
+//       userID,
+//     ]);
+//     // send success message
+//     res.send({
+//       success: true,
+//       data: todos,
+//       error: null,
+//     });
+//   } catch (err) {
+//     return res.send({
+//       success: false,
+//       data: null,
+//       error: err,
+//     });
+//   }
+// }
+
+// module.exports = { add, remove, edit, all, byUserID };

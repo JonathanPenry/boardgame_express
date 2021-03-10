@@ -17,11 +17,13 @@ function isInvalid(val, min, max) {
 }
 
 // Async function with try & catch
+// Passes (req.body.username, req.body.password, done) Could pass the entire object too (req) like for a SIGNUP form
 // done() function is an internal passport js function that takes care of supplying user credentials after user is authenticated successfully.
 // done (whether ther is an error, if there is a user, error message) are 
 passport.use(new LocalStrategy(async (username, password, done) => {
     try {
         if (isInvalid(username, 8, 16) || isInvalid(password, 8, 20)) {
+            // Passport- instead of throw, we return done and errors
             return done(null, false, "Invalid Data Provided");
         }
         // check the database for the username provided
@@ -37,7 +39,7 @@ passport.use(new LocalStrategy(async (username, password, done) => {
         if (!match) {
             return done(null, false, "Invalid password");
         }
-        // if they do, let them in
+        // if they do, let them in with the user that was found during the request
         return done(null, users[0]);
     } catch (err) {
         return done(err, false);
