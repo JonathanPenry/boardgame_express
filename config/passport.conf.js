@@ -42,6 +42,7 @@ passport.use(new LocalStrategy(async (username, password, done) => {
         // if they do, let them in with the user that was found during the request
         return done(null, users[0]);
     } catch (err) {
+        console.log(err);
         return done(err, false);
     }
 })

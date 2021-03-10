@@ -16,6 +16,13 @@ const userRoutes = require("./routes/users.routes");
 const usergamesRoutes = require("./routes/usergames.routes");
 
 
+// This needs to be before the app.use for the routes so it must stay at the top.
+// For Passport-Sessions
+app.use(session({ secret: process.env.SECRET_KEY }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 ///////////////
 // APP.USE() //
 ///////////////
@@ -25,11 +32,6 @@ const usergamesRoutes = require("./routes/usergames.routes");
 app.use(bodyParser.json());
 app.use("/users", userRoutes);
 app.use("/usergames", usergamesRoutes);
-// For Passport-Sessions
-app.use(session({ secret: process.env.SECRET_KEY }));
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 ///////////////
