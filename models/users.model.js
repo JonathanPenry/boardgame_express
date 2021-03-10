@@ -19,28 +19,42 @@ const bcrypt = require("bcrypt");               // Password hashing
 ////////////
 // Async function with try & catch
 // Helper function to determine if username and password are valid
-// function isInvalid(val, min, max) {
-//     return !val || val.length < min || val.length > max;
-// }
+function isValid(val, min, max) {
+    return !val || val.length < min || val.length > max;
+}
 
-async function signUp(res, username, password) {
+// Route signup is passing all of the signup info as req.body on the route side
+// Bringing it in to this funciton as userToAdd (could have named it anything...)
+// Refer to each of the keys we need as userToAdd.username, userToAdd.city, etc...
+async function signUp(res, userToAdd) {
     try {
         // Are username and password between 8-20 characters
-        if (isValid(username, 8, 20) || (isValid(password, 8, 20))) {
+        if (isValid(userToAdd.username, 8, 20) || (isValid(userToAdd.password, 8, 20))) {
             throw "Invalid login data provided";
         }
         // Check database to see if username is already taken (DB is expecting an array [rows, columns])
-        let [user,] = await pool.query("SELECT * FROM users WHERE user.username = ?", [username,])
-            if (user.length > 0) {throw "Username is already taken"};
+        let [user,] = await pool.query("SELECT * FROM users WHERE users.username = ?", [userToAdd.username,])
+        if (user.length > 0) { throw "Username is already taken" };
         // Hash password and insert username and password into the database
-        const encrypted = await bcrypt.hash(password, 8);
-        await pool.query("INSERT INTO users (username, password) VALUES= (?, ?)", [username, encrypted]);
+        const encrypted = await bcrypt.hash(userToAdd.password, 8);
+        await pool.query("INSERT INTO users (username, password, firstname, lastname, city, state, visible) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [userToAdd.username, encrypted, userToAdd.firstname, userToAdd.lastname, userToAdd.city, userToAdd.state, userToAdd.visible]);
         // Send success statement
-        return res.send({success: true, data: "Successfully signed up", error: null});
+        return res.send({ success: true, data: "Successfully signed up", error: null });
     } catch (err) {
-        return res.send({success: false, data: null, error: err});
+        return res.send({ success: false, data: null, error: err });
     }
 }
+
+
+
+
+/////////////
+// EXPORTS //
+/////////////
+// Import into the users.routes.js
+module.exports.signUp = signUp;
+// module.exports.login = login;        // Login has been moved to passport.conf.js
 
 
 ///////////
@@ -65,11 +79,3 @@ async function signUp(res, username, password) {
 //         return res.send({success: false, data: null, error: err});
 //     }
 // }
-
-
-/////////////
-// EXPORTS //
-/////////////
-// Import into the users.routes.js
-module.exports.signUp = signUp;
-// module.exports.login = login;        // Login has been moved to passport.conf.js

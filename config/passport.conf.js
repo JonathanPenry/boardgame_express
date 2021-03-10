@@ -57,6 +57,7 @@ passport.serializeUser(function (user, done) {
     done(null, user.id);
 });
 
+
 // Deserialize the username from the cookie and determine if it's a real user
 // Async in try/catch pattern
 passport.deserializeUser(async function (id, done) {
