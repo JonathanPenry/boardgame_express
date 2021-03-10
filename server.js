@@ -5,6 +5,7 @@
 require("dotenv").config();
 const passport = require("./config/passport.conf");
 const express = require("express");
+
 const app = express();
 const session = require("express-session")
 // port is either the production port in env file or port 3000
@@ -18,6 +19,7 @@ const usergamesRoutes = require("./routes/usergames.routes");
 
 // This needs to be before the app.use for the routes so it must stay at the top.
 // For Passport-Sessions
+app.use(express.static(__dirname + "/build"));
 app.use(session({ secret: process.env.SECRET_KEY }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
@@ -42,8 +44,7 @@ app.use("/usergames", usergamesRoutes);
 // Basically is it intended for binding the middleware to your application.
 // Path: It is the path for which the middleware function is being called.
 // Callback: Can be a middleware function or series/array of middleware functions.
-app.get("/", (req, res) => res.send("Index page - Hello"));
-app.get("*", (req, res) => res.redirect("/"));      // Rerouting everything back to localhost:3000/     
+app.get("*", (req, res) => {res.sendFile("/build/index.html", {root:__dirname + "/"})});    
 
 
 //////////////////
